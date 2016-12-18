@@ -32,12 +32,12 @@ from anki.hooks import wrap, addHook
 
 import tempfile
 
-from config import *
-from resources import *
-from ngen import *
-from dialogs import ImgOccEdit, ImgOccOpts, ioHelp, ioError
-from utils import imageProp, img2path, path2url
-import nconvert
+from .config import *
+from .resources import *
+from .ngen import *
+from .dialogs import ImgOccEdit, ImgOccOpts, ioHelp, ioError
+from .utils import imageProp, img2path, path2url
+from . import nconvert
 
 logging.basicConfig(stream=sys.stdout, level=logging.ERROR)
 
@@ -215,7 +215,7 @@ class ImgOccAdd(object):
         svg_edit = dialog.svg_edit
         svg = svg_edit.page().mainFrame().evaluateJavaScript(
             "svgCanvas.svgCanvasToString();")
-        svg = unicode(svg) # store svg as unicode string
+        svg = str(svg) # store svg as unicode string
 
         r1 = self.getUserInputs(dialog)
         if r1 == False:
@@ -288,7 +288,7 @@ class ImgOccAdd(object):
         fields = {}
         # note type integrity check:
         io_model_fields = mw.col.models.fieldNames(self.model)
-        if not all(x in io_model_fields for x in self.ioflds.values()):
+        if not all(x in io_model_fields for x in list(self.ioflds.values())):
             ioError("<b>Error</b>: Image Occlusion note type " \
                 "not configured properly.Please make sure you did not " \
                 "manually delete or rename any of the default fields.",
@@ -325,9 +325,9 @@ def onImgOccButton(ed, mode):
     if io_model:
         io_model_fields = mw.col.models.fieldNames(io_model)
         if "imgocc" in mw.col.conf:
-            dflt_fields = mw.col.conf['imgocc']['flds'].values()
+            dflt_fields = list(mw.col.conf['imgocc']['flds'].values())
         else:
-            dflt_fields = IO_FLDS.values()
+            dflt_fields = list(IO_FLDS.values())
         # note type integrity check
         if not all(x in io_model_fields for x in dflt_fields):
             ioError("<b>Error</b>: Image Occlusion note type " \

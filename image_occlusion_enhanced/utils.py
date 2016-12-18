@@ -16,13 +16,13 @@ import os, re
 
 from aqt import mw
 
-import urlparse, urllib
+import urllib.parse, urllib.request, urllib.parse, urllib.error
 from Imaging.PIL import Image
 
 def path2url(path):
     """URL-encode local path"""
-    return urlparse.urljoin(
-      'file:', urllib.pathname2url(path.encode('utf-8')))
+    return urllib.parse.urljoin(
+      'file:', urllib.request.pathname2url(path.encode('utf-8')))
 
 def fname2img(path):
     """Return HTML img element for given path"""
