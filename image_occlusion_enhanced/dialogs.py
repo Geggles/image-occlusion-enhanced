@@ -171,19 +171,20 @@ class ImgOccEdit(QDialog):
         self.svg_edit.setFocus()
 
         # Define and connect key bindings
-
+        qts = QtWidgets.QShortcut
+        qtk = QtGui.QKeySequence
         ## Field focus hotkeys
         for i in range(1,10):
-            QtWidgets.QShortcut(QtGui.QKeySequence("Ctrl+%i" %i), self).activated.connect(lambda f=i-1:self.focusField(f))
+            qts(qtk("Ctrl+%i" %i), self).activated.connect(lambda _, f=i-1:self.focusField(f))
         ## Other hotkeys
-        QtWidgets.QShortcut(QtGui.QKeySequence("Ctrl+Return"), self).activated.connect(lambda: self.defaultAction(True))
-        QtWidgets.QShortcut(QtGui.QKeySequence("Ctrl+Alt+Return"), self).activated.connect(lambda: self.addAA(True))
-        QtWidgets.QShortcut(QtGui.QKeySequence("Ctrl+Shift+Return"), self).activated.connect(lambda: self.addOA(True))
-        QtWidgets.QShortcut(QtGui.QKeySequence("Ctrl+Tab"), self).activated.connect(self.switchTabs)
-        QtWidgets.QShortcut(QtGui.QKeySequence("Ctrl+r"), self).activated.connect(self.resetMainFields)
-        QtWidgets.QShortcut(QtGui.QKeySequence("Ctrl+Shift+r"), self).activated.connect(self.resetAllFields)
-        QtWidgets.QShortcut(QtGui.QKeySequence("Ctrl+Shift+t"), self).activated.connect(lambda:self.focusField(self.tags_edit))
-        QtWidgets.QShortcut(QtGui.QKeySequence("Ctrl+f"), self).activated.connect(self.fitImageCanvas)
+        qts(qtk("Ctrl+Return"), self).activated.connect(lambda _: self.defaultAction(True))
+        qts(qtk("Ctrl+Alt+Return"), self).activated.connect(lambda _: self.addAA(True))
+        qts(qtk("Ctrl+Shift+Return"), self).activated.connect(lambda _: self.addOA(True))
+        qts(qtk("Ctrl+Tab"), self).activated.connect(self.switchTabs)
+        qts(qtk("Ctrl+r"), self).activated.connect(self.resetMainFields)
+        qts(qtk("Ctrl+Shift+r"), self).activated.connect(self.resetAllFields)
+        qts(qtk("Ctrl+Shift+t"), self).activated.connect(lambda _:self.focusField(self.tags_edit))
+        qts(qtk("Ctrl+f"), self).activated.connect(self.fitImageCanvas)
 
 
     # Various actions that act on / interact with the ImgOccEdit UI:
@@ -380,9 +381,9 @@ class ImgOccOpts(QDialog):
         self.qfill_btn = QPushButton()
         self.ofill_btn = QPushButton()
         self.scol_btn = QPushButton()
-        self.qfill_btn.clicked.connect(lambda a="qfill", b=self.qfill_btn: self.getNewColor(a, b))
-        self.ofill_btn.clicked.connect(lambda a="ofill", b=self.ofill_btn: self.getNewColor(a, b))
-        self.scol_btn.clicked.connect(lambda a="scol", b=self.scol_btn: self.getNewColor(a, b))
+        self.qfill_btn.clicked.connect(lambda _, a="qfill", b=self.qfill_btn: self.getNewColor(a, b))
+        self.ofill_btn.clicked.connect(lambda _, a="ofill", b=self.ofill_btn: self.getNewColor(a, b))
+        self.scol_btn.clicked.connect(lambda _, a="scol", b=self.scol_btn: self.getNewColor(a, b))
 
         swidth_label = QLabel("Line width")
         font_label = QLabel("Label font")

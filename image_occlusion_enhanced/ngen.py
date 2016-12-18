@@ -26,8 +26,8 @@ from aqt.utils import tooltip
 from anki.notes import Note
 
 from xml.dom import minidom
-from Imaging.PIL import Image
-from uuid import uuid
+from .Imaging import PIL
+from .uuid import uuid
 import shutil
 
 from .dialogs import ioHelp, ioAskUser

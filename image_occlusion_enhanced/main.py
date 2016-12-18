@@ -379,7 +379,7 @@ def onSetNote(self, node, hide=True, focus=False):
 # Set up menus and hooks
 options_action = QAction("Image &Occlusion Enhanced Options...", mw)
 help_action = QAction("Image &Occlusion Enhanced...", mw)
-options_action.triggered.connect(lambda o=mw: onIoSettings(o))
+options_action.triggered.connect(lambda _, o=mw: onIoSettings(o))
 help_action.triggered.connect(onIoHelp)
 mw.form.menuTools.addAction(options_action)
 mw.form.menuHelp.addAction(help_action)

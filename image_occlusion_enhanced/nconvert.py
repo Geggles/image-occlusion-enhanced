@@ -256,6 +256,6 @@ def setupMenu(self):
     menu = self.form.menuEdit
     menu.addSeparator()
     a = menu.addAction('Convert to Editable IO &Enhanced Notes')
-    a.triggered.connect(lambda b=self: onIoConvert(b))
+    a.triggered[()].connect(lambda b=self: onIoConvert(b))
 
 addHook("browser.setupMenus", setupMenu)
