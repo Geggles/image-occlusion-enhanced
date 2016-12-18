@@ -19,8 +19,9 @@ Sets up buttons and menus and calls other modules.
 import logging, sys
 import os
 
-from PyQt4.QtGui import QFileDialog, QAction, QKeySequence
-from PyQt4.QtCore import QUrl
+from PyQt5.QtGui import QKeySequence
+from PyQt5.QtWidgets import QFileDialog, QAction
+from PyQt5.QtCore import QUrl
 from aqt.qt import *
 
 from aqt import mw
@@ -118,7 +119,7 @@ class ImgOccAdd(object):
 
         image_path = QFileDialog.getOpenFileName(parent,
                      "Choose Image", prev_image_dir,
-                     "Image Files (*.png *jpg *.jpeg *.gif)")
+                     "Image Files (*.png *jpg *.jpeg *.gif)")[0]
 
         if not image_path:
             return None
@@ -378,10 +379,8 @@ def onSetNote(self, node, hide=True, focus=False):
 # Set up menus and hooks
 options_action = QAction("Image &Occlusion Enhanced Options...", mw)
 help_action = QAction("Image &Occlusion Enhanced...", mw)
-mw.connect(options_action, SIGNAL("triggered()"),
-            lambda o=mw: onIoSettings(o))
-mw.connect(help_action, SIGNAL("triggered()"),
-            onIoHelp)
+options_action.triggered.connect(lambda o=mw: onIoSettings(o))
+help_action.triggered.connect(onIoHelp)
 mw.form.menuTools.addAction(options_action)
 mw.form.menuHelp.addAction(help_action)
 

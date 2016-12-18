@@ -14,8 +14,7 @@ Makes older IO notes editable.
 
 import logging, sys
 
-from PyQt4.QtCore import SIGNAL
-from PyQt4.QtGui import QKeySequence
+from PyQt5.QtGui import QKeySequence
 from anki.hooks import addHook
 from aqt.utils import tooltip
 
@@ -257,6 +256,6 @@ def setupMenu(self):
     menu = self.form.menuEdit
     menu.addSeparator()
     a = menu.addAction('Convert to Editable IO &Enhanced Notes')
-    self.connect(a, SIGNAL("triggered()"), lambda b=self: onIoConvert(b))
+    a.triggered.connect(lambda b=self: onIoConvert(b))
 
 addHook("browser.setupMenus", setupMenu)

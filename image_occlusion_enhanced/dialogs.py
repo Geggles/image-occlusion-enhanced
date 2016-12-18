@@ -18,7 +18,7 @@ Handles all major dialogs
 
 import logging, sys
 
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 from aqt.qt import *
 from anki.errors import AnkiError
 
@@ -75,7 +75,7 @@ class ImgOccEdit(QDialog):
 
         # Button row widgets
         self.bottom_label = QLabel()
-        button_box = QtGui.QDialogButtonBox(QtCore.Qt.Horizontal, self)
+        button_box = QtWidgets.QDialogButtonBox(QtCore.Qt.Horizontal, self)
         button_box.setCenterButtons(False)
 
         image_btn = QPushButton("Change &Image", clicked=self.changeImage)
@@ -124,12 +124,12 @@ class ImgOccEdit(QDialog):
         self.occl_tp_select.setItemData(2, aa_tt, Qt.ToolTipRole)
         self.occl_tp_select.setItemData(3, oa_tt, Qt.ToolTipRole)
 
-        self.connect(self.edit_btn, SIGNAL("clicked()"), self.edit_note)
-        self.connect(self.new_btn, SIGNAL("clicked()"), self.new)
-        self.connect(self.ao_btn, SIGNAL("clicked()"), self.addAO)
-        self.connect(self.aa_btn, SIGNAL("clicked()"), self.addAA)
-        self.connect(self.oa_btn, SIGNAL("clicked()"), self.addOA)
-        self.connect(close_button, SIGNAL("clicked()"), self.close)
+        self.edit_btn.clicked.connect(self.edit_note)
+        self.new_btn.clicked.connect(self.new)
+        self.ao_btn.clicked.connect(self.addAO)
+        self.aa_btn.clicked.connect(self.addAA)
+        self.oa_btn.clicked.connect(self.addOA)
+        close_button.clicked.connect(self.close)
 
         # Set basic layout up
 
@@ -154,7 +154,7 @@ class ImgOccEdit(QDialog):
         self.tab2 = QWidget()
         tab1.setLayout(vbox1)
         self.tab2.setLayout(self.vbox2)
-        self.tab_widget = QtGui.QTabWidget()
+        self.tab_widget = QtWidgets.QTabWidget()
         self.tab_widget.addTab(tab1,"&Masks Editor")
         self.tab_widget.addTab(self.tab2,"&Fields")
         self.tab_widget.setTabToolTip(1, "Include additional information (optional)")
@@ -162,7 +162,7 @@ class ImgOccEdit(QDialog):
 
         ## Main Window
         vbox_main = QVBoxLayout()
-        vbox_main.setMargin(5);
+        vbox_main.setContentsMargins(5, 5, 5, 5)
         vbox_main.addWidget(self.tab_widget)
         vbox_main.addLayout(bottom_hbox)
         self.setLayout(vbox_main)
@@ -174,26 +174,16 @@ class ImgOccEdit(QDialog):
 
         ## Field focus hotkeys
         for i in range(1,10):
-            s = self.connect(QtGui.QShortcut(QtGui.QKeySequence("Ctrl+%i" %i), self),
-                QtCore.SIGNAL('activated()'),
-                lambda f=i-1:self.focusField(f))
+            QtWidgets.QShortcut(QtGui.QKeySequence("Ctrl+%i" %i), self).activated.connect(lambda f=i-1:self.focusField(f))
         ## Other hotkeys
-        self.connect(QtGui.QShortcut(QtGui.QKeySequence("Ctrl+Return"), self),
-            QtCore.SIGNAL('activated()'), lambda: self.defaultAction(True))
-        self.connect(QtGui.QShortcut(QtGui.QKeySequence("Ctrl+Alt+Return"), self),
-            QtCore.SIGNAL('activated()'), lambda: self.addAA(True))
-        self.connect(QtGui.QShortcut(QtGui.QKeySequence("Ctrl+Shift+Return"), self),
-            QtCore.SIGNAL('activated()'), lambda: self.addOA(True))
-        self.connect(QtGui.QShortcut(QtGui.QKeySequence("Ctrl+Tab"), self),
-            QtCore.SIGNAL('activated()'), self.switchTabs)
-        self.connect(QtGui.QShortcut(QtGui.QKeySequence("Ctrl+r"), self),
-            QtCore.SIGNAL('activated()'), self.resetMainFields)
-        self.connect(QtGui.QShortcut(QtGui.QKeySequence("Ctrl+Shift+r"), self),
-            QtCore.SIGNAL('activated()'), self.resetAllFields)
-        self.connect(QtGui.QShortcut(QtGui.QKeySequence("Ctrl+Shift+t"), self),
-            QtCore.SIGNAL('activated()'), lambda:self.focusField(self.tags_edit))
-        self.connect(QtGui.QShortcut(QtGui.QKeySequence("Ctrl+f"), self),
-            QtCore.SIGNAL('activated()'), self.fitImageCanvas)
+        QtWidgets.QShortcut(QtGui.QKeySequence("Ctrl+Return"), self).activated.connect(lambda: self.defaultAction(True))
+        QtWidgets.QShortcut(QtGui.QKeySequence("Ctrl+Alt+Return"), self).activated.connect(lambda: self.addAA(True))
+        QtWidgets.QShortcut(QtGui.QKeySequence("Ctrl+Shift+Return"), self).activated.connect(lambda: self.addOA(True))
+        QtWidgets.QShortcut(QtGui.QKeySequence("Ctrl+Tab"), self).activated.connect(self.switchTabs)
+        QtWidgets.QShortcut(QtGui.QKeySequence("Ctrl+r"), self).activated.connect(self.resetMainFields)
+        QtWidgets.QShortcut(QtGui.QKeySequence("Ctrl+Shift+r"), self).activated.connect(self.resetAllFields)
+        QtWidgets.QShortcut(QtGui.QKeySequence("Ctrl+Shift+t"), self).activated.connect(lambda:self.focusField(self.tags_edit))
+        QtWidgets.QShortcut(QtGui.QKeySequence("Ctrl+f"), self).activated.connect(self.fitImageCanvas)
 
 
     # Various actions that act on / interact with the ImgOccEdit UI:
@@ -390,12 +380,9 @@ class ImgOccOpts(QDialog):
         self.qfill_btn = QPushButton()
         self.ofill_btn = QPushButton()
         self.scol_btn = QPushButton()
-        self.qfill_btn.connect(self.qfill_btn, SIGNAL("clicked()"),
-            lambda a="qfill", b=self.qfill_btn: self.getNewColor(a, b))
-        self.ofill_btn.connect(self.ofill_btn, SIGNAL("clicked()"),
-            lambda a="ofill", b=self.ofill_btn: self.getNewColor(a, b))
-        self.scol_btn.connect(self.scol_btn, SIGNAL("clicked()"),
-            lambda a="scol", b=self.scol_btn: self.getNewColor(a, b))
+        self.qfill_btn.clicked.connect(lambda a="qfill", b=self.qfill_btn: self.getNewColor(a, b))
+        self.ofill_btn.clicked.connect(lambda a="ofill", b=self.ofill_btn: self.getNewColor(a, b))
+        self.scol_btn.clicked.connect(lambda a="scol", b=self.scol_btn: self.getNewColor(a, b))
 
         swidth_label = QLabel("Line width")
         font_label = QLabel("Label font")
@@ -424,7 +411,7 @@ class ImgOccOpts(QDialog):
         fields_description = QLabel(fields_text)
         fields_description.setWordWrap(True)
 
-        grid = QtGui.QGridLayout()
+        grid = QtWidgets.QGridLayout()
         grid.setSpacing(10)
 
         grid.addWidget(colors_heading, 0, 0, 1, 3)
@@ -486,7 +473,7 @@ class ImgOccOpts(QDialog):
                                         | QDialogButtonBox.Cancel)
         defaults_btn = button_box.addButton("Restore &Defaults",
            QDialogButtonBox.ResetRole)
-        self.connect(defaults_btn, SIGNAL("clicked()"), self.restoreDefaults)
+        defaults_btn.clicked.connect(self.restoreDefaults)
         button_box.accepted.connect(self.onAccept)
         button_box.rejected.connect(self.onReject)
 
@@ -503,9 +490,9 @@ class ImgOccOpts(QDialog):
         """
         Returns a QFrame that is a sunken, horizontal rule.
         """
-        frame = QtGui.QFrame()
-        frame.setFrameShape(QtGui.QFrame.HLine)
-        frame.setFrameShadow(QtGui.QFrame.Sunken)
+        frame = QtWidgets.QFrame()
+        frame.setFrameShape(QtWidgets.QFrame.HLine)
+        frame.setFrameShadow(QtWidgets.QFrame.Sunken)
         return frame
 
     def getNewColor(self, clrvar, clrbtn):
